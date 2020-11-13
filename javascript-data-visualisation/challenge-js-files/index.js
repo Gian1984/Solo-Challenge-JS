@@ -58,49 +58,63 @@ new Chart(document.getElementById("line-chart"), {
 
 //exo2
 
-document.querySelector("#table2").insertAdjacentHTML('beforebegin', '<canvas id="graph2"></canvas>');
+document.querySelector("#table2").insertAdjacentHTML('beforebegin', '<canvas id="barChart"></canvas>');
 
-let labelDatesTwo = Array.from(document.querySelectorAll("#table2 thead tr ")[0].children);
-labelDatesTwo.shift();
-labelDatesTwo.shift();
-let arrayDatesTwo = [];
-
-labelDatesTwo.forEach(function(years) {
-    if (years.innerText.length > 0) {
-        arrayDatesTwo.push(years.innerText)
-    }
-})
+let trCountries = Array.from(document.querySelectorAll("#table2 tbody tr"));
+let arCountry = [];
 
 
-let datasetsTwo = Array.from(document.querySelectorAll("#table2 tbody tr"));
-datasetsTwo.shift();
-let datasetsHomicide = [];
+trCountries.forEach(function(trcountry) {
+    arCountry.push(trcountry.children[1].innerText)
+});
 
-datasetsTwo.forEach(function(trTwo) {
-    let object = {};
-    let dataTwo = Array.from(trTwo.children);
-    let arrDataTwo = [];
-    dataTwo.shift();
-    dataTwo.shift();
-    dataTwo.forEach(function(y) {
-        arrDataTwo.push(parseInt(y.innerText))
-    });
-    object.data = arrDataTwo;
-    object.label = trTwo.children[1].innerText;
-    object.backgroundColor = getRandomColor();
-    datasetsHomicide.push(object);
-})
+console.log(arCountry)
+let arDataOne = [];
+let arDataTwo = [];
 
-new Chart(document.getElementById("graph2"), {
+trCountries.forEach(function(trcountry) {
+
+    arDataOne.push(parseInt(trcountry.children[2].innerText))
+    arDataTwo.push(parseInt(trcountry.children[3].innerText))
+});
+
+console.log(arDataTwo)
+console.log(arDataOne)
+let labelOne = document.querySelector("#table2 thead tr").children[2].innerText
+let labelTwo = document.querySelector("#table2 thead tr").children[3].innerText
+
+
+var ctx = document.getElementById('barChart').getContext('2d');
+var myChart = new Chart(ctx, {
     type: 'bar',
     data: {
-        labels: arrayDatesTwo,
-        datasets: datasetsHomicide
+        labels: arCountry,
+        datasets: [{
+                label: labelOne,
+                data: arDataOne,
+                backgroundColor: 'rgb(65, 212, 146)'
+            },
+            {
+                label: labelTwo,
+                data: arDataTwo
+            }
+        ]
     },
     options: {
-        title: {
-            display: true,
-            text: 'Crimes in Europe:'
+        legend: {
+            display: true
+        },
+        scales: {
+            xAxes: [{
+                gridLines: {
+                    display: false
+                }
+            }],
+            yAxes: [{
+                gridLines: {
+                    display: false
+                }
+            }]
         }
     }
 });
@@ -111,10 +125,70 @@ new Chart(document.getElementById("graph2"), {
 
 
 
-
 // 3nd exo
-// h1 = document.querySelector('body h1')
-// h1.insertAdjacentHTML('afterend', '<canvas id="line-chart1" width="800" height="450"></canvas>')
+h1 = document.querySelector('body h1')
+h1.insertAdjacentHTML('afterend', '<canvas id="myChart" width="700" height="300"></canvas>')
+
+let dataPoints = []
+
+function graf(data) {
+    let ctx = document.getElementById("myChart");
+    let myChart = new Chart(ctx, {
+        type: 'scatter',
+        data: {
+            datasets: [{
+                    label: 'Chart 1',
+                    data: data,
+                    showLine: true,
+                    fill: false,
+                    borderColor: 'rgba(0, 200, 0, 1)'
+                },
+
+            ]
+        },
+        options: {
+            tooltips: {
+                mode: 'index',
+                intersect: false,
+            },
+            hover: {
+                mode: 'nearest',
+                intersect: true
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            },
+        }
+    });
+};
+
+
+
+
+fetch('https://canvasjs.com/services/data/datapoints.php')
+    .then(response => response.json())
+    .then((data) => {
+        data.forEach(function(value) {
+            dataPoints.push({ x: parseInt(value[0]), y: parseInt(value[1]) });
+        });
+        console.log(dataPoints)
+        graf(dataPoints)
+    })
+
+
+// 
+
+
+// .then((data) => {
+//     dataPoints.push({
+//         x: parseInt(value[0]),
+//         y: parseInt(value[1])
+//     });
+// })
 
 // let dataPoints = [];
 
