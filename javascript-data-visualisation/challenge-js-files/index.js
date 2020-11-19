@@ -146,70 +146,40 @@ function graf(data) {
 
             ]
         },
-        options: {
-            tooltips: {
-                mode: 'index',
-                intersect: false,
-            },
-            hover: {
-                mode: 'nearest',
-                intersect: true
-            },
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            },
-        }
+
     });
+
 };
 
-
-
-
-fetch('https://canvasjs.com/services/data/datapoints.php')
-    .then(response => response.json())
-    .then((data) => {
-        data.forEach(function(value) {
-            dataPoints.push({ x: parseInt(value[0]), y: parseInt(value[1]) });
-        });
-        console.log(dataPoints)
-        graf(dataPoints)
-    })
-
-
-// 
-
-
-// .then((data) => {
-//     dataPoints.push({
-//         x: parseInt(value[0]),
-//         y: parseInt(value[1])
-//     });
-// })
-
-// let dataPoints = [];
-
-// let xhr = new XMLHttpRequest();
-// xhr.open('GET', 'https://canvasjs.com/services/data/datapoints.php');
-// xhr.send(null);
-
-// xhr.onreadystatechange = function() {
-//     let DONE = 4; // readyState 4 means the request is done.
-//     let OK = 200; // status 200 is a successful return.
-//     if (xhr.readyState === DONE) {
-//         if (xhr.status === OK) {
-//             console.log(xhr.responseText);
-//             Array.from(xhr.responseText).forEach(function(key, value) {
-//                 dataPoints.push({ x: parseInt(value[0]), y: parseInt(value[1]).innerText });
-//             });
-
-//         } else {
-//             console.log('Error: ' + xhr.status); // An error occurred during the request.
-//         }
-//     }
+// function updateConfigByMutating(myChart) {
+//     myChart.data.datasets[0].data = dataPoints;
+//     myChart.update();
 // };
-// setInterval(xhr.onreadystatechange, 1000); // get new data every 3 seconds
-// console.log(dataPoints)
+
+
+setInterval(getData, 2000);
+
+function getData() {
+    dataPoints = []
+    fetch('https://canvasjs.com/services/data/datapoints.php?xstart=1&ystart=' + Math.floor(Math.random() * 10) + '&length=20&type=json')
+        .then(response => response.json())
+        .then((data) => {
+            data.forEach(function(value) {
+                dataPoints.push({ x: parseInt(value[0]), y: parseInt(value[1]) });
+            });
+            console.log(dataPoints)
+            graf(dataPoints)
+
+        });
+}
+
+
+
+
+// function(response) {
+//     if (response.ok) {
+//         return response.json();
+//     } else {
+//         return Promise.reject(response);
+//     }
+// })
